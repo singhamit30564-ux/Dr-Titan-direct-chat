@@ -4,7 +4,7 @@ A local, chat-first web console for **NVIDIA BioNeMo** — protein folding, mole
 generation, docking, sequence design, embeddings and genomics — running on a
 Streamlit server on your own machine.
 
-![status](https://img.shields.io/badge/tests-116%20passing-76b900) ![python](https://img.shields.io/badge/python-3.10%2B-76b900) ![gpu](https://img.shields.io/badge/GPU-not%20required-76b900)
+![status](https://img.shields.io/badge/tests-127%20passing-76b900) ![python](https://img.shields.io/badge/python-3.10%2B-76b900) ![gpu](https://img.shields.io/badge/GPU-not%20required-76b900)
 
 > **Two sentences that matter.** BioNeMo's inference models ship as *NIM
 > microservices* (GPU containers that serve HTTP); this console drives them. When
@@ -60,6 +60,8 @@ colouring controls, Plotly charts, sortable tables and per-result downloads
 
 ## The models
 
+Seventeen models are catalogued, grouped by the task they do:
+
 | Task | Models | NIM container |
 | --- | --- | --- |
 | Structure prediction | ESMFold, AlphaFold2, OpenFold3, Boltz-2 | `nvcr.io/nim/meta/esmfold`, `.../deepmind/alphafold2` |
@@ -70,6 +72,7 @@ colouring controls, Plotly charts, sortable tables and per-result downloads
 | Docking | DiffDock | `nvcr.io/nim/mit/diffdock` |
 | Genomics | Evo 2, CodonFM | `nvcr.io/nim/arc/evo2-40b` |
 | Protein search | MSA Search | `nvcr.io/nim/nvidia/msa-search` |
+| Segmentation | VISTA-3D | `nvcr.io/nim/nvidia/vista3d` |
 
 Each entry carries its endpoint path, parameter schema and a
 `path_confidence` marker (`documented` / `configurable` / `verified`), because
@@ -134,7 +137,7 @@ required.
 ## Development
 
 ```bash
-make test        # pytest: 116 tests, offline, ~70 s
+make test        # pytest: 127 tests, offline, ~70 s
 make lint        # syntax-check every module
 make demo        # run in pure simulation mode
 make nims        # start local NIM containers (needs GPU + NGC key)
