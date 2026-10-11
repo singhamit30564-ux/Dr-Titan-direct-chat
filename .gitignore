@@ -1,0 +1,49 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# --- App runtime state (databases, run artifacts, uploads, reports) ---
+.runtime/
+var/
+runs/
+artifacts/
+*.sqlite3
+*.db
+
+# --- Vendored / fetched BioNeMo source (fetched on demand, never committed) ---
+third_party/bionemo-framework/
+third_party/nemo/
+third_party/*/
+!third_party/3dmol/
+!third_party/3dmol/**
+
+# --- Secrets ---
+.env
+.env.*
+!.env.example
+*.key
+secrets.toml
+.streamlit/secrets.toml
+
+# --- OS / editors ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# --- Vendored viewer (3Dmol.js, BSD-3) is committed on purpose ---
+!bionemo_web/static/
+!bionemo_web/static/**

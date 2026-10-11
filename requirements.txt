@@ -1,0 +1,29 @@
+# Dr-Titan BioNeMo Web Console — runtime requirements.
+#
+# Everything here is CPU-only and installs from PyPI wheels: the console runs on
+# a laptop with no GPU. GPU acceleration arrives through the NIM containers it
+# talks to, not through these packages.
+#
+# Python 3.10+ is required (3.11 recommended).
+
+# --- interface -----------------------------------------------------------
+streamlit>=1.50,<2          # width="stretch" API; 1.50 is the floor for it
+plotly>=5.20                # every chart in the app
+pandas>=2.0                 # tables and frames
+
+# --- chemistry -----------------------------------------------------------
+rdkit>=2023.9                # descriptors, fingerprints, conformers, substructure
+numpy>=1.24
+
+# --- service layer -------------------------------------------------------
+requests>=2.31              # NIM HTTP client
+
+# --- optional but recommended --------------------------------------------
+# PyTorch + transformers enable the in-process ESM-2 runtime backend (no NIM
+# container needed for embeddings). Install the CUDA build matching your driver
+# if you have a GPU:
+# pip install torch --index-url https://download.pytorch.org/whl/cu124
+# transformers>=4.40
+
+# 3Dmol.js is vendored in bionemo_web/static/3Dmol-min.js (BSD-3), so the 3D
+# viewer needs no package and no network access.
