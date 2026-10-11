@@ -1,0 +1,71 @@
+# Dr-Titan BioNeMo Web Console, two ways to run it.
+#
+# 1. Console only (default), talking to NIMs on the host or elsewhere:
+#
+#       docker compose up --build
+#       open http://localhost:8501
+#
+# 2. Console + a local NIM, on a machine with an NVIDIA GPU and
+#    nvidia-container-toolkit installed:
+#
+#       NGC_API_KEY=nvapi-xxx docker compose --profile gpu up --build
+#
+#    The `nim-esmfold` service becomes reachable inside the compose network as
+#    http://nim-esmfold:8000, so set that as the endpoint on Administration →
+#    Backends (or just leave default "auto" and use the host URL).
+#
+# Notes
+#   * The GPU profile will not start on a machine without a GPU; profile them
+#     precisely so `docker compose up` stays harmless everywhere.
+#   * NGC_API_KEY is only needed for pulling NIM images from nvcr.io and for
+#     NVIDIA's hosted endpoints.
+
+services:
+  console:
+    build: .
+    image: dr-titan-console:1.0.0
+    container_name: dr-titan-console
+    ports:
+      - "8501:8501"
+    environment:
+      # Where the console looks for local NIM containers. Inside a container,
+      # "localhost" is the console itself, so point at the host explicitly.
+      BIONEMO_NIM_URL: ${BIONEMO_NIM_URL:-http://host.docker.internal:8000}
+      BIONEMO_BACKEND: ${BIONEMO_BACKEND:-auto}
+      # Enables NVIDIA's hosted NIMs and the language-model provider.
+      NGC_API_KEY: ${NGC_API_KEY:-}
+      NVIDIA_API_KEY: ${NVIDIA_API_KEY:-}
+      BIONEMO_CONSOLE_HOME: /app/.runtime
+    volumes:
+      # Conversations, runs, artifacts and settings persist across restarts.
+      - ./.runtime:/app/.runtime
+      # Optional: mount the fetched BioNeMo source read-only for reference.
+      - ./third_party:/app/third_party:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------
+  # GPU profile: one NIM, as a worked example. Add more by copying the block
+  # and changing name/image/port (see scripts/start_nims.sh for the full list).
+  # ---------------------------------------------------------------------
+  nim-esmfold:
+    image: nvcr.io/nim/meta/esmfold:latest
+    container_name: nim-esmfold
+    profiles: ["gpu"]
+    ports:
+      - "8000:8000"
+    environment:
+      NGC_API_KEY: ${NGC_API_KEY:?set NGC_API_KEY to pull NIM images}
+      NIM_CACHE_PATH: /opt/nim/.cache
+    volumes:
+      - ${HOME}/.cache/nim/esmfold:/opt/nim/.cache
+    shm_size: "16gb"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped

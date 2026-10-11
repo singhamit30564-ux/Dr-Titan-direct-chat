@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dr-titan-bionemo-console"
+version = "1.0.0"
+description = "Local Streamlit chat console for NVIDIA BioNeMo NIM microservices: protein folding, molecule generation, docking, design and genomics."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Dr-Titan" }]
+keywords = ["bionemo", "nvidia", "nim", "drug-discovery", "protein", "streamlit"]
+dependencies = [
+    "streamlit>=1.50,<2",
+    "requests>=2.31",
+    "numpy>=1.26",
+    "pandas>=2.1",
+    "plotly>=5.20",
+    "rdkit>=2023.9",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+local = ["scikit-learn>=1.4", "transformers>=4.40", "torch>=2.3", "biopython>=1.83"]
+
+[project.urls]
+Documentation = "https://docs.nvidia.com/nim/bionemo/latest/index.html"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.setuptools]
+packages = [
+    "bionemo_web",
+    "bionemo_web.bio",
+    "bionemo_web.nims",
+    "bionemo_web.engine",
+    "bionemo_web.ui",
+    "bionemo_web.console",
+]
+
+[tool.setuptools.package-data]
+bionemo_web = ["static/*.js", "static/*.txt", "static/*LICENSE*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
