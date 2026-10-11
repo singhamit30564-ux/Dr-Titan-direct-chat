@@ -16,6 +16,7 @@ UI can present a geometric model as if it were a NIM prediction.
 from __future__ import annotations
 
 import json
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence
 
 import numpy as np
@@ -131,7 +132,7 @@ def downloads_block(outcome: Any, *, run_id: str = "") -> None:
     for index, record in enumerate(files):
         path = record["path"]
         try:
-            data = open(path, "rb").read()
+            data = Path(path).read_bytes()
         except OSError:
             continue
         with columns[index % len(columns)]:

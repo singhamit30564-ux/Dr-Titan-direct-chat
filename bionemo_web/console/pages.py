@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import time
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import numpy as np
@@ -675,7 +676,7 @@ def history_page(store: Any) -> None:
             for record in artifacts[:40]:
                 path = record["path"]
                 try:
-                    data = open(path, "rb").read()
+                    data = Path(path).read_bytes()
                 except OSError:
                     continue
                 st.download_button(f"{record['name']} ({record['size']} B)", data=data,
